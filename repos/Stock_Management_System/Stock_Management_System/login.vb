@@ -1,0 +1,39 @@
+﻿Imports System.Data.SqlClient
+Public Class login
+    Dim Con As New SqlConnection("Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\dom\Documents\StockvbDB.mdf;Integrated Security=True;Connect Timeout=30")
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim r As New role
+        r.Show()
+        Me.Hide()
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        If Adminnamelg.Text = "" Then
+            MsgBox("Enter AdminName")
+        ElseIf Password.Text = "" Then
+            MsgBox("Enter password")
+        Else
+            Con.Open()
+            Dim query = "select * from AdminTable where AdminName = '" & Adminnamelg.Text & "'and AdminPassword ='" & Password.Text & "'"
+            Dim cmd As SqlCommand
+            cmd = New SqlCommand(query, Con)
+            Dim da As SqlDataAdapter = New SqlDataAdapter(cmd)
+            Dim ds As DataSet = New DataSet()
+            da.Fill(ds)
+            Dim a As Integer
+            a = ds.Tables(0).Rows.Count
+            If a = 0 Then
+                MsgBox("Wrong Adminname and Password")
+            Else
+                Dim d As New Dashboard
+                d.Show()
+                Me.Hide()
+            End If
+            Con.Close()
+        End If
+    End Sub
+
+    Private Sub login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
+End Class
